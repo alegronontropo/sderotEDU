@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from '
 import { supabase } from './supabaseClient';
 import { 
   School, Search, ChevronLeft, ArrowRight, 
-  User, Phone, Plus, Info, Mail, Save, X, ExternalLink, Edit2
+  User, Phone, Plus, Info, Mail, Save, X, ExternalLink, Edit2, MessageCircle
 } from 'lucide-react';
 
 // --- מסך 1: רשימת המוסדות ---
@@ -100,12 +100,39 @@ function InstitutionDetails() {
 
         <div style={{ display: 'grid', gap: '10px' }}>
           {contacts.map(c => (
-            <div key={c.id} onClick={() => navigate(`/edit-contact/${c.id}/${id}`)} style={{ backgroundColor: 'white', padding: '15px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
-              <div>
+            <div key={c.id} style={{ backgroundColor: 'white', padding: '15px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+              
+              {/* לחיצה על הטקסט מובילה לעריכה */}
+              <div onClick={() => navigate(`/edit-contact/${c.id}/${id}`)} style={{ cursor: 'pointer', flex: 1 }}>
                 <p style={{ margin: 0, fontWeight: 'bold' }}>{c.name}</p>
-                <p style={{ margin: 0, fontSize: '0.8rem', color: '#666' }}>{c.phone} | {c.email}</p>
+                <p style={{ margin: 0, fontSize: '0.8rem', color: '#666' }}>{c.role}</p>
               </div>
-              <Edit2 size={16} color="#ccc" />
+
+              {/* סמלי פעולה מהירה */}
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginRight: '10px' }}>
+                {c.phone && (
+                  <>
+                    <a href={`tel:${c.phone}`} style={{ color: '#2e7d32' }}>
+                      <Phone size={20} />
+                    </a>
+                    <a 
+                      href={`https://wa.me/972${c.phone.replace(/^0/, '')}`} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      style={{ color: '#25D366' }}
+                    >
+                      <MessageCircle size={20} />
+                    </a>
+                  </>
+                )}
+                {c.email && (
+                  <a href={`mailto:${c.email}`} style={{ color: '#2e7d32' }}>
+                    <Mail size={20} />
+                  </a>
+                )}
+                <Edit2 size={16} color="#ccc" onClick={() => navigate(`/edit-contact/${c.id}/${id}`)} style={{ cursor: 'pointer', marginLeft: '5px' }} />
+              </div>
+
             </div>
           ))}
         </div>
